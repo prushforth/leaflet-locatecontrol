@@ -11,11 +11,23 @@ module.exports = function (grunt) {
         sourceMap: true
       },
       build: {
-        src: "src/L.Control.Locate.js",
-        dest: "dist/L.Control.Locate.min.js"
+        files: [
+          {
+            src: "dist/L.Control.Locate.umd.js",
+            dest: "dist/L.Control.Locate.min.js"
+          },
+          {
+            src: "dist/L.Control.Locate.esm.js",
+            dest: "dist/L.Control.Locate.esm.min.js"
+          }
+        ]
       }
     },
     sass: {
+      options: {
+        implementation: require("sass"),
+        sourceMap: false
+      },
       dist: {
         options: {
           style: "compressed"
@@ -47,6 +59,9 @@ module.exports = function (grunt) {
           "dist/L.Control.Locate.mapbox.css",
           "dist/L.Control.Locate.mapbox.min.css",
           "dist/L.Control.Locate.mapbox.min.css.map",
+          "dist/L.Control.Locate.esm.js",
+          "dist/L.Control.Locate.esm.min.js",
+          "dist/L.Control.Locate.esm.min.js.map",
           "dist/L.Control.Locate.min.js",
           "dist/L.Control.Locate.min.js.map"
         ],
@@ -61,14 +76,45 @@ module.exports = function (grunt) {
           keepalive: true
         }
       }
+    },
+    rollup: {
+      options: {
+        plugins: [
+          require("@rollup/plugin-node-resolve").nodeResolve(),
+          require("@rollup/plugin-commonjs")()
+        ]
+      },
+      build_es: {
+        options: {
+          format: "es",
+          external: ["leaflet"]
+        },
+        files: {
+          "dist/L.Control.Locate.esm.js": "src/L.Control.Locate.js"
+        }
+      },
+      build_umd: {
+        options: {
+          format: "umd",
+          name: "L.Control.Locate",
+          external: ["leaflet"],
+          globals: {
+            leaflet: "L"
+          }
+        },
+        files: {
+          "dist/L.Control.Locate.umd.js": "src/L.Control.Locate.js"
+        }
+      }
     }
   });
 
   grunt.loadNpmTasks("grunt-contrib-uglify");
-  grunt.loadNpmTasks("grunt-contrib-sass");
+  grunt.loadNpmTasks("grunt-sass");
   grunt.loadNpmTasks("grunt-bump");
   grunt.loadNpmTasks("grunt-contrib-connect");
+  grunt.loadNpmTasks("grunt-rollup");
 
   // Default task(s).
-  grunt.registerTask("default", ["uglify", "sass"]);
+  grunt.registerTask("default", ["rollup:build_es", "rollup:build_umd", "uglify", "sass"]);
 };
