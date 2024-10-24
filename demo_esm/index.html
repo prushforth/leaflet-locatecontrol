@@ -5,11 +5,10 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css"
-    />
-<!--  the module needs to resolve "leaflet" to the es module version of leaflet 1.9.4
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css">
+    <link rel="stylesheet" href="../dist/L.Control.Locate.min.css">
+    <link rel="stylesheet" href="style.css">
+    <!--  the module needs to resolve "leaflet" to the es module version of leaflet 1.9.4
      use import maps, see: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules#importing_modules_using_import_maps -->
     <script type="importmap">
       {
@@ -18,11 +17,9 @@
         }
       }
     </script>
-    <link rel="stylesheet" href="../dist/L.Control.Locate.min.css" />
-    <link rel="stylesheet" href="style.css" />
     <script type="module">
       import { Map, TileLayer } from 'leaflet';
-      import { LocateControl } from '../dist/L.Control.Locate.esm.js';
+      import { LocateControl } from '../src/L.Control.Locate.js';
 
       const osmUrl = "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
       const osmAttrib = 'Map data © <a href="http://osm.org/copyright">OpenStreetMap</a> contributors';
